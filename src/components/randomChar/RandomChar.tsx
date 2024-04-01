@@ -7,7 +7,8 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
 
-    p('Объект CSS стилей: ', buttons);
+    //p('Объект CSS стилей RandomChar: ', buttons);
+    //p('Картинка thor: ', thor);
 
     return (
         <div className={styles.randomchar}>

@@ -3,7 +3,7 @@ import styles from './appHeader.module.scss';
 
 const AppHeader = () => {
 
-    p('Объект CSS стилей: ', styles);
+    p('Объект CSS стилей AppHeader: ', styles);
 
     return (
         <header className={styles.app__header}>

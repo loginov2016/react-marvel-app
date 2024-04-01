@@ -11,7 +11,7 @@ import decoration from '../../resources/img/vision.png';
 
 const App = () => {
 
-    p('Объект CSS стилей: ', styles);
+    p('Объект CSS стилей App: ', styles);
 
     return (
         <div className={styles.app}>
