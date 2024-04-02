@@ -6,7 +6,7 @@ import thor from '../../resources/img/thor.jpeg';
 
 const CharInfo = () => {
 
-    p('Объект CSS стилей CharInfo: ', styles);
+    //p('Объект CSS стилей CharInfo: ', styles);
 
     return (
         <div className={styles.char__info}>
