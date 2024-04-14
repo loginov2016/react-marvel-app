@@ -5,7 +5,7 @@ type Mods = Record<string, boolean | string>;
 
     return [
         cls,
-        ...Object.entries(mods).filter( ([key, value]) => Boolean(value) ).map( ([key, value]) => key ), 
+        ...Object.entries(mods).filter( ([key, value]) => value ).map( ([key, value]) => key ), 
         ...additional
     ].join(' ');
 }

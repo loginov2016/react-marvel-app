@@ -1,4 +1,4 @@
-import { p } from '../../lib/print';
+import p from '../../lib/print';
 import styles from './appBanner.module.scss';
 import avengers from '../../resources/img/Avengers.png';
 import avengersLogo from '../../resources/img/Avengers_logo.png';

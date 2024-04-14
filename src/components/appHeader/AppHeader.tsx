@@ -1,4 +1,4 @@
-import { p } from '../../lib/print';
+import p from '../../lib/print';
 import styles from './appHeader.module.scss';
 
 const AppHeader = () => {
