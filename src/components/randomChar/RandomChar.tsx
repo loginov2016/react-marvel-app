@@ -1,5 +1,5 @@
 import { CSSProperties, useState, ReactPropTypes, useEffect, FC, ReactElement, ReactNode } from 'react';
-import MarvelService from '../../service/service';
+import useMarvelService from '../../customhooks/useMarvelService.hook';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import p from '../../lib/print';
@@ -24,51 +24,39 @@ interface IPropsType {
 const RandomChar: FC = (): ReactNode => {    
     p('RandomChar FC');
 
-    const [char, setChar] = useState<ICharType>(null);
+    const [char, setChar]       = useState<ICharType>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError]     = useState(false);
     const [newRandomCharLoading, setNewRandomCharLoading] = useState(false);
-    const [error, setError] = useState(false);
+    
 
-    const marvelService = new MarvelService();
+    const marvelService = useMarvelService();
 
     useEffect( () => {
         p('RandomChar useEffect => updateChar');
         updateChar();
+        /* const timerId = setInterval(updateChar, 100000);
+        return () => {
+            clearInterval(timerId);
+        } */
     }, [] );
 
     const onCharLoaded = (char: ICharType): void => {
         p('RandomChar onCharLoaded => state => render');
-        /* this.setState({
-            char, 
-            loading: false, 
-            newRandomCharLoading: false
-        }) // char: char */
         setChar(char);
         setLoading(false);
         setNewRandomCharLoading(false);
-
     }
 
     const onCharLoading = () => {
         p('RandomChar onCharloading => state => render');
-        /* this.setState( { 
-            loading: true,
-            newRandomCharLoading: true,
-            error: false 
-        }); */
         setLoading(true);
         setNewRandomCharLoading(true);
         setError(false);
-
     }
 
     const onCharError = (): void => {
         p('RandomChar onCharError => state => render');
-       /*  this.setState({
-           loading: false,
-           newRandomCharLoading: false,
-           error: true, 
-        }) */
         setLoading(false);
         setNewRandomCharLoading(false);
         setError(true);
@@ -82,42 +70,40 @@ const RandomChar: FC = (): ReactNode => {
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
     }
 
+    p('RandomChar render');
+    //marvelServices.getAllChars().then( item => p(item.data.results.forEach( (char: { name: string; }) => p(char.name) )) );
+    //this.marvelServices.getChar(1011052).then( item => p(item.data.results[0]) );
+    //p('Объект CSS стилей RandomChar: ', buttons);
     
-        p('RandomChar render');
-        //marvelServices.getAllChars().then( item => p(item.data.results.forEach( (char: { name: string; }) => p(char.name) )) );
-        //this.marvelServices.getChar(1011052).then( item => p(item.data.results[0]) );
-        //p('Объект CSS стилей RandomChar: ', buttons);
-        
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !loading && !error ? <View char={char}/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !loading && !error ? <View char={char}/> : null;
 
-        return (
-            <div className={styles.randomchar}>
-                { errorMessage }
-                { spinner }
-                { content }
-                <div className={styles.randomchar__static}>
-                    <p className={styles.randomchar__title}>
-                        Random character for today!<br/>
-                        Do you want to get to know him better?
-                    </p>
-                    <p className={styles.randomchar__title}>
-                        Or choose another one
-                    </p>
-                    <button 
-                        className={cn(buttons.button, buttons.button__main)} 
-                        onClick={updateChar}
-                        disabled={newRandomCharLoading}
-                        >
-                        <div className={buttons.inner}>try it</div>
-                    </button>
-                    <img src={mjolnir} alt="mjolnir" className={styles.randomchar__decoration}/>
-                </div>
+    return (
+        <div className={styles.randomchar}>
+            { errorMessage }
+            { spinner }
+            { content }
+            <div className={styles.randomchar__static}>
+                <p className={styles.randomchar__title}>
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className={styles.randomchar__title}>
+                    Or choose another one
+                </p>
+                <button 
+                    className={cn(buttons.button, buttons.button__main)} 
+                    onClick={updateChar}
+                    disabled={newRandomCharLoading}
+                    >
+                    <div className={buttons.inner}>try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className={styles.randomchar__decoration}/>
             </div>
-        )    
-        
-    
+        </div>
+    )    
+
 }
 
 const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactNode => {

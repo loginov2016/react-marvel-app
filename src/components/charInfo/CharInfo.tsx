@@ -1,7 +1,7 @@
 import p from '../../lib/print';
 import { CSSProperties, FC, useState, useEffect, useRef, PropsWithChildren, ReactElement } from 'react';
-import { usePrevProps } from '../../customhooks/usePrevProps';
-import MarvelService from '../../service/service';
+import { usePrevProps } from '../../customhooks/usePrevProps.hook';
+import useMarvelService from '../../customhooks/useMarvelService.hook';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
@@ -18,7 +18,7 @@ interface IViewPropsType {
     char: ICharType
 }
 
-interface comicType {
+interface IComicType {
     name: string | null,
     resourceURI: string | null
 }
@@ -29,7 +29,7 @@ interface ICharType {
     thumbnail: string | null,
     homepage: string | null,
     wiki: string | null,
-    comics: comicType[] | null
+    comics: IComicType[] | null
 }
 interface IStateType {
     char: ICharType | null,
@@ -46,12 +46,12 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
         loading: false,
         error: false,
     }; */
-    const prevProps             = usePrevProps(props);
+    const prevPropsCharId             = usePrevProps<number>(props.charId);
     const [char, setChar]       = useState<ICharType>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError]     = useState(false);
 
-    const marvelService = new MarvelService();
+    const marvelService = useMarvelService();
 
     useEffect( () => {
         p('CharInfo updateChar');
@@ -66,7 +66,7 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
 
     useEffect( () => {
         p('CharInfo useEffect 2');
-        if( props.charId !== prevProps ) {
+        if( props.charId !== prevPropsCharId ) {
             updateChar();
         }
     }, [props.charId] );

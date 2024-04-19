@@ -1,6 +1,6 @@
 import p from '../../lib/print';
 import { RefObject, useState, useEffect, useRef, FC } from 'react';
-import MarvelService from '../../service/service';
+import useMarvelService from '../../customhooks/useMarvelService.hook';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 import { CSSProperties, ReactElement, Component } from 'react';
@@ -35,7 +35,7 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
     //itemRefs = createRef<HTMLLIElement[]>();
     const arrRefs = useRef<HTMLLIElement[]>([]);
 
-    const marvelService = new MarvelService();
+    const marvelService = useMarvelService();
 
     useEffect( () => {
         onRequest(undefined);
