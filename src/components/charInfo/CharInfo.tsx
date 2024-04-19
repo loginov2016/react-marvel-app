@@ -1,5 +1,6 @@
 import p from '../../lib/print';
-import { Component, CSSProperties } from 'react';
+import { CSSProperties, FC, useState, useEffect, useRef, PropsWithChildren, ReactElement } from 'react';
+import { usePrevProps } from '../../customhooks/usePrevProps';
 import MarvelService from '../../service/service';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -36,85 +37,90 @@ interface IStateType {
     error: boolean,
 }
 
-class CharInfo extends Component<IPropsType, IStateType> {
+const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
 
     //p('Объект CSS стилей CharInfo: ', styles);
     
-    state: IStateType = {
+    /* state: IStateType = {
         char : null,
         loading: false,
         error: false,
-    };
+    }; */
+    const prevProps             = usePrevProps(props);
+    const [char, setChar]       = useState<ICharType>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError]     = useState(false);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount(): void {
-        p('CharInfo componentDidMount');
-        this.updateChar();
-    }
+    useEffect( () => {
+        p('CharInfo updateChar');
+        updateChar();
+    }, []);
 
-    componentDidUpdate(prevProps: IPropsType, prevState: IStateType): void {
-        p('CharInfo componentDidUpdate');
+    /* componentDidUpdate(prevProps: IPropsType, prevState: IStateType): void {
         if( this.props.charId !== prevProps.charId ) {
             this.updateChar();
         }
-        
-    }
+    } */
 
-    onCharLoaded = (char: ICharType): void => {
+    useEffect( () => {
+        p('CharInfo useEffect 2');
+        if( props.charId !== prevProps ) {
+            updateChar();
+        }
+    }, [props.charId] );
+
+    const onCharLoaded = (char: ICharType): void => {
         p('CharInfo onCharLoaded => state => render');
         p('CharInfo onCharLoaded: ', char);
-        this.setState({char, loading: false}) // char: char
-        
+        //setState({char, loading: false}) // char: char
+        setChar(char);
+        setLoading(false);
     }
 
-    onCharLoading = () => {
+    const onCharLoading = (): void => {
         p('CharInfo onCharloading => state => render');
-        this.setState( { 
-            loading: true,
-            error: false 
-        });
+        setLoading(true);
+        setError(false);
     }
 
-    onCharError = (): void => {
+    const onCharError = (): void => {
         p('CharInfo onCharError => state => render');
-        this.setState({
-           loading: false,
-           error: true, 
-        })
+        setLoading(false);
+        setError(true);
     }
 
-    updateChar = () => {
+    const updateChar = (): void => {
         p('CharInfo updateChar => state => render');
-        const { charId } = this.props;
+        const { charId } = props;
         p('charId: ', charId);
         if( !charId ) {
             return;
         }
-        this.onCharLoading(); // Перед запросом будет показываться спиннер.
+        onCharLoading(); // Перед запросом будет показываться спиннер.
         //p('getChar => ...', this.marvelServices.getChar(id)); //Warning: Can't call setState on a component that is not yet mounted.
-        this.marvelService.getChar(charId).then( this.onCharLoaded  ).catch( this.onCharError );
+        marvelService.getChar(charId).then( onCharLoaded  ).catch( onCharError );
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
         // Метод getChar() => вернет промис с результатом - массив с одним элементом - объектом типа ICharType.
     }
 
-    render() {
-        const { char, loading, error } = this.state;
-        //p('char: ', char, 'loading: ', loading, 'error: ', error);
-        const skeleton = char || loading || error ? null : <Skeleton/>;
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !loading && !error && char ? <View char={char}/> : null;
+    
+    //p('char: ', char, 'loading: ', loading, 'error: ', error);
+    const skeleton = char || loading || error ? null : <Skeleton/>;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !loading && !error && char ? <View char={char}/> : null;
 
-        return (
-            <div className={styles.char__info}>
-                { skeleton }
-                { errorMessage }
-                { spinner }
-                { content }
-            </div>
-        )
-    }
+    return (
+        <div className={styles.char__info}>
+            { skeleton }
+            { errorMessage }
+            { spinner }
+            { content }
+        </div>
+    )
+
 }
 
 const View = ({char}: IViewPropsType) => {
@@ -152,8 +158,6 @@ const View = ({char}: IViewPropsType) => {
                         </li>
                     )
                 } ) : 'There is no comics with this character' }
-                
-                
             </ul>
         </>
     )

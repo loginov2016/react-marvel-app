@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, FC } from 'react';
 import p from '../../lib/print';
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
@@ -14,35 +14,32 @@ export interface IStateAppType {
     selectedCharId: number | null
 }
 
-class App extends Component {
-
-    state: IStateAppType = {
+const App: FC = () => {
+    /* const state: IStateAppType = {
         selectedCharId: null,
-    };
+        };
+    */
+    const [selectedChar, setSelectedChar] = useState<number | null>(null);
 
-    onCharSelected = (id: number): void => {
+    const onCharSelected = (id: number): void => {
         //p('id: ', id)
-        this.setState({
-            selectedCharId: id,
-        })
+        setSelectedChar(id);
     }
-
-    render() {
-        //p('Объект CSS стилей App: ', styles);
-        return (
-            <div className={styles.app}>
-                <AppHeader/>
-                <main className={styles.main}>
-                    <RandomChar/>
-                    <div className={char_styles.char__content}>
-                        <CharList onCharSelected={this.onCharSelected}/>
-                        <CharInfo charId={this.state.selectedCharId}/>
-                    </div>
-                    <img className={styles['bg-decoration']} src={decoration} alt="vision"/>
-                </main>
-            </div>
-        )
-    }
+    //p('Объект CSS стилей App: ', styles);
+    return (
+        <div className={styles.app}>
+            <AppHeader/>
+            <main className={styles.main}>
+                <RandomChar/>
+                <div className={char_styles.char__content}>
+                    <CharList onCharSelected={onCharSelected}/>
+                    <CharInfo charId={selectedChar}/>
+                </div>
+                <img className={styles['bg-decoration']} src={decoration} alt="vision"/>
+            </main>
+        </div>
+    )
+    
 }
 
 export default App;

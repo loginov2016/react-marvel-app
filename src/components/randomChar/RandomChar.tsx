@@ -1,4 +1,4 @@
-import { CSSProperties, Component, ReactPropTypes } from 'react';
+import { CSSProperties, useState, ReactPropTypes, useEffect, FC, ReactElement, ReactNode } from 'react';
 import MarvelService from '../../service/service';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -16,85 +16,78 @@ interface ICharType {
     homepage: string | null,
     wiki: string | null,
 }
-interface IStateType {
-    char: ICharType,
-    loading: boolean,
-    newRandomCharLoading: boolean
-    error: boolean,
-}
 
 interface IPropsType {
     char: ICharType
 }
 
-class RandomChar extends Component {
-    constructor(props: any) {
-        super(props);
-        p('RandomChar constructor');
-    }
+const RandomChar: FC = (): ReactNode => {    
+    p('RandomChar FC');
 
-    state: IStateType = {
-        char : {
-            id: null,
-            name: null,
-            description: null,
-            thumbnail: null,
-            homepage: null,
-            wiki: null, 
-        },
-        loading: true,
-        newRandomCharLoading: false,
-        error: false,
-    };
+    const [char, setChar] = useState<ICharType>(null);
+    const [loading, setLoading] = useState(true);
+    const [newRandomCharLoading, setNewRandomCharLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        p('RandomChar componentDidMount');
-        this.updateChar();
-    }
+    useEffect( () => {
+        p('RandomChar useEffect => updateChar');
+        updateChar();
+    }, [] );
 
-    onCharLoaded = (char: ICharType): void => {
+    const onCharLoaded = (char: ICharType): void => {
         p('RandomChar onCharLoaded => state => render');
-        this.setState({
+        /* this.setState({
             char, 
             loading: false, 
             newRandomCharLoading: false
-        }) // char: char
+        }) // char: char */
+        setChar(char);
+        setLoading(false);
+        setNewRandomCharLoading(false);
+
     }
 
-    onCharLoading = () => {
+    const onCharLoading = () => {
         p('RandomChar onCharloading => state => render');
-        this.setState( { 
+        /* this.setState( { 
             loading: true,
             newRandomCharLoading: true,
             error: false 
-        });
+        }); */
+        setLoading(true);
+        setNewRandomCharLoading(true);
+        setError(false);
+
     }
 
-    onCharError = (): void => {
+    const onCharError = (): void => {
         p('RandomChar onCharError => state => render');
-        this.setState({
+       /*  this.setState({
            loading: false,
            newRandomCharLoading: false,
            error: true, 
-        })
+        }) */
+        setLoading(false);
+        setNewRandomCharLoading(false);
+        setError(true);
     }
 
-    updateChar = (): void => {
+    const updateChar = (): void => {
         p('RandomChar updateChar => state => render');
         const id = Math.floor( Math.random() * 400 + 1011000 );
-        this.onCharLoading();
-        this.marvelService.getChar(id).then( this.onCharLoaded  ).catch( this.onCharError );
+        onCharLoading();
+        marvelService.getChar(id).then( onCharLoaded  ).catch( onCharError );
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
     }
 
-    render() {
+    
         p('RandomChar render');
         //marvelServices.getAllChars().then( item => p(item.data.results.forEach( (char: { name: string; }) => p(char.name) )) );
         //this.marvelServices.getChar(1011052).then( item => p(item.data.results[0]) );
         //p('Объект CSS стилей RandomChar: ', buttons);
-        const {char, loading, error } = this.state;
+        
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !loading && !error ? <View char={char}/> : null;
@@ -114,8 +107,8 @@ class RandomChar extends Component {
                     </p>
                     <button 
                         className={cn(buttons.button, buttons.button__main)} 
-                        onClick={this.updateChar}
-                        disabled={this.state.newRandomCharLoading}
+                        onClick={updateChar}
+                        disabled={newRandomCharLoading}
                         >
                         <div className={buttons.inner}>try it</div>
                     </button>
@@ -124,10 +117,10 @@ class RandomChar extends Component {
             </div>
         )    
         
-    }
+    
 }
 
-const View = ( {char}: IPropsType  ) => {
+const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactNode => {
     const {name, description, thumbnail, homepage, wiki} = char;
 
     let imgStyle: CSSProperties = {'objectFit': 'cover'};
