@@ -1,4 +1,5 @@
 import p from '../../lib/print';
+import { Link, NavLink } from 'react-router-dom';
 import styles from './appHeader.module.scss';
 
 const AppHeader = () => {
@@ -8,15 +9,15 @@ const AppHeader = () => {
     return (
         <header className={styles.app__header}>
             <h1 className={styles.app__title}>
-                <a href="#">
+                <Link to="/">
                     <span>Marvel</span> information portal
-                </a>
+                </Link>
             </h1>
             <nav className={styles.app__menu}>
                 <ul>
-                    <li><a href="#">Characters</a></li>
+                    <li><NavLink exact activeStyle={{'color': '#9f0013'}} to="/">Characters</NavLink></li>
                     /
-                    <li><a href="#">Comics</a></li>
+                    <li><NavLink exact activeStyle={{'color': '#9f0013'}} to="/comics">Comics</NavLink></li>
                 </ul>
             </nav>
         </header>

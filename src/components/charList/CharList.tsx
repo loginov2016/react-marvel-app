@@ -26,8 +26,6 @@ interface ICharListType {
 const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
 
     const [charList, setCharList]   = useState<ICharListType[]>([]);
-    const [loading, setLoading]     = useState(true);
-    const [error, setError]         = useState(false);
     const [newCharListLoading, setNewCharListLoading] = useState(false);
     const [offset, setOffset]       = useState<number>(400); // 210, 1554
     const [charEnded, setCharEnded] = useState(false);
@@ -35,15 +33,11 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
     //itemRefs = createRef<HTMLLIElement[]>();
     const arrRefs = useRef<HTMLLIElement[]>([]);
 
-    const marvelService = useMarvelService();
+    const {loading, error, clearError, getAllChars} = useMarvelService();
 
     useEffect( () => {
-        onRequest(undefined);
+        onRequest(offset, true);
     }, []);
-
-    const onCharListLoading = (): void => {
-        setNewCharListLoading(true);
-    }
 
     const onCharListLoaded = (newCharList: ICharListType[] | []): void => {
         let ended = false;
@@ -52,16 +46,9 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
         }
         // Предыдущий стейт: пустой массив [] и offset === 400
         setCharList( prevCharList => [...prevCharList, ...newCharList] );
-        setLoading(false);
-        setError(false);
         setNewCharListLoading(false);
         setOffset(offset => offset + 9);
         setCharEnded(ended);
-    }
- 
-    const onCharError = (): void => {
-        setError(true);
-        setLoading(false);
     }
 
     const focusOnItem = (i: number): void => {
@@ -71,12 +58,9 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
         arrRefs.current[i].focus();
     }
 
-    const onRequest = (offset: number | undefined): void => {
-        onCharListLoading();
-        marvelService
-            .getAllChars(offset)
-            .then( onCharListLoaded )
-            .catch( onCharError );
+    const onRequest = (offset: number | undefined, initial: boolean): void => {
+        initial ? setNewCharListLoading(false) : setNewCharListLoading(true);
+        getAllChars(offset).then( onCharListLoaded )
     }
 
     function renderCharList(arr: ICharListType[]): ReactElement {
@@ -121,19 +105,19 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner      = loading ? <Spinner/> : null;
+    const spinner      = loading && !newCharListLoading ? <Spinner/> : null;
     const itemsLi      = renderCharList(charList);
-    const content      = !loading && !error ? itemsLi : null;
+    //const content      = !(loading || error) ? itemsLi : null;
 
     return (
         <div className={styles.char__list}>
                 {errorMessage}
                 {spinner}
-                {content}
+                {itemsLi}
             <button className={cn(buttons.button, buttons.button__main, buttons.button__long)}
                 disabled={newCharListLoading}
                 style={{'display': charEnded ? 'none' : 'block'}}
-                onClick={() => onRequest(offset)}>
+                onClick={() => onRequest(offset, false)}>
                 <div className={buttons.inner}>load more</div>
             </button>
         </div>

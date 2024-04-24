@@ -23,19 +23,16 @@ interface IPropsType {
 
 const RandomChar: FC = (): ReactNode => {    
     p('RandomChar FC');
-
-    const [char, setChar]       = useState<ICharType>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError]     = useState(false);
+    const {loading, error, clearError, getChar} = useMarvelService(); // {loading: false, error: null, f(){...}, f(){...}}
+    const [char, setChar]                       = useState<ICharType>(null);
     const [newRandomCharLoading, setNewRandomCharLoading] = useState(false);
     
-
-    const marvelService = useMarvelService();
+    
 
     useEffect( () => {
         p('RandomChar useEffect => updateChar');
         updateChar();
-        /* const timerId = setInterval(updateChar, 100000);
+        /* const timerId = setInterval(updateChar, 60000);
         return () => {
             clearInterval(timerId);
         } */
@@ -44,29 +41,16 @@ const RandomChar: FC = (): ReactNode => {
     const onCharLoaded = (char: ICharType): void => {
         p('RandomChar onCharLoaded => state => render');
         setChar(char);
-        setLoading(false);
         setNewRandomCharLoading(false);
-    }
-
-    const onCharLoading = () => {
-        p('RandomChar onCharloading => state => render');
-        setLoading(true);
-        setNewRandomCharLoading(true);
-        setError(false);
-    }
-
-    const onCharError = (): void => {
-        p('RandomChar onCharError => state => render');
-        setLoading(false);
-        setNewRandomCharLoading(false);
-        setError(true);
     }
 
     const updateChar = (): void => {
         p('RandomChar updateChar => state => render');
+        clearError();
         const id = Math.floor( Math.random() * 400 + 1011000 );
-        onCharLoading();
-        marvelService.getChar(id).then( onCharLoaded  ).catch( onCharError );
+        //p(getChar(id).then( item => p(item) ) );
+        getChar(id).then( onCharLoaded ).catch( e => setNewRandomCharLoading(false)) // Set loading = true; Когда в getChar происходит ошибка запроса, то onCharLoaded не выполняется.
+                                          // Следовательно newRandomCharLoading === true
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
     }
 
@@ -76,8 +60,14 @@ const RandomChar: FC = (): ReactNode => {
     //p('Объект CSS стилей RandomChar: ', buttons);
     
     const errorMessage = error ? <ErrorMessage/> : null;
+    /* if( error ) {
+        setNewRandomCharLoading(false); 
+    } */
+    //p('Random Char loading: ', loading);
+    p('Random Char newRandomCharLoading: ', newRandomCharLoading);
+    //const charError = error ? setNewRandomCharLoading(false) : null;
     const spinner = loading ? <Spinner/> : null;
-    const content = !loading && !error ? <View char={char}/> : null;
+    const content = !(loading || error || !char) ? <View char={char}/> : null; // <View char={char}/><h1>Loading</h1>!loading && !error 
 
     return (
         <div className={styles.randomchar}>
@@ -94,7 +84,11 @@ const RandomChar: FC = (): ReactNode => {
                 </p>
                 <button 
                     className={cn(buttons.button, buttons.button__main)} 
-                    onClick={updateChar}
+                    onClick={ () => {
+                                setNewRandomCharLoading(true); 
+                                updateChar();
+                            }
+                    }
                     disabled={newRandomCharLoading}
                     >
                     <div className={buttons.inner}>try it</div>
@@ -106,7 +100,8 @@ const RandomChar: FC = (): ReactNode => {
 
 }
 
-const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactNode => {
+const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactElement => {
+    p('char: ', char);
     const {name, description, thumbnail, homepage, wiki} = char;
 
     let imgStyle: CSSProperties = {'objectFit': 'cover'};

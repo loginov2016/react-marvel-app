@@ -41,28 +41,14 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
 
     //p('Объект CSS стилей CharInfo: ', styles);
     
-    /* state: IStateType = {
-        char : null,
-        loading: false,
-        error: false,
-    }; */
-    const prevPropsCharId             = usePrevProps<number>(props.charId);
+    const prevPropsCharId       = usePrevProps<number>(props.charId);
     const [char, setChar]       = useState<ICharType>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState(false);
-
-    const marvelService = useMarvelService();
+    const {loading, error, clearError, getChar} = useMarvelService();
 
     useEffect( () => {
         p('CharInfo updateChar');
         updateChar();
     }, []);
-
-    /* componentDidUpdate(prevProps: IPropsType, prevState: IStateType): void {
-        if( this.props.charId !== prevProps.charId ) {
-            this.updateChar();
-        }
-    } */
 
     useEffect( () => {
         p('CharInfo useEffect 2');
@@ -74,21 +60,8 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
     const onCharLoaded = (char: ICharType): void => {
         p('CharInfo onCharLoaded => state => render');
         p('CharInfo onCharLoaded: ', char);
-        //setState({char, loading: false}) // char: char
         setChar(char);
-        setLoading(false);
-    }
-
-    const onCharLoading = (): void => {
-        p('CharInfo onCharloading => state => render');
-        setLoading(true);
-        setError(false);
-    }
-
-    const onCharError = (): void => {
-        p('CharInfo onCharError => state => render');
-        setLoading(false);
-        setError(true);
+        //setLoading(false);
     }
 
     const updateChar = (): void => {
@@ -98,9 +71,10 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
         if( !charId ) {
             return;
         }
-        onCharLoading(); // Перед запросом будет показываться спиннер.
+        clearError();
+        //onCharLoading(); // Перед запросом будет показываться спиннер.
         //p('getChar => ...', this.marvelServices.getChar(id)); //Warning: Can't call setState on a component that is not yet mounted.
-        marvelService.getChar(charId).then( onCharLoaded  ).catch( onCharError );
+        getChar(charId).then( onCharLoaded  );
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
         // Метод getChar() => вернет промис с результатом - массив с одним элементом - объектом типа ICharType.
     }
@@ -110,7 +84,7 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
     const skeleton = char || loading || error ? null : <Skeleton/>;
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
-    const content = !loading && !error && char ? <View char={char}/> : null;
+    const content = !(loading || error || !char) ? <View char={char}/> : null;
 
     return (
         <div className={styles.char__info}>
