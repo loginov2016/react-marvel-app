@@ -1,8 +1,13 @@
-import { FC, ReactNode } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { FC, ReactNode, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppHeader from "../appHeader/AppHeader";
-import { MainPage, ComicsPage } from '../pages';
+import Spinner from '../spinner/Spinner';
+import { MainPage, ComicsPage, SingleComicPage } from '../pages';
 import appStyles from './App.module.scss';
+
+// Динамические импорты нельзя ставить выше статических импортов.
+const Page404 = lazy( () => import('../pages/Page404') );
+
 
 const App: FC = (): ReactNode => {
     
@@ -11,15 +16,17 @@ const App: FC = (): ReactNode => {
             <div className={appStyles.app}>
                 <AppHeader/>
                 <main className={appStyles.main}>
-                    <Switch>
-                        <Route exact path="/">
-                            <MainPage/>
-                        </Route>
-                        <Route exact path="/comics">
-                            <ComicsPage/>
-                        </Route>
-                    </Switch>
-                    
+                    <Suspense fallback={<Spinner/>}>
+                        <Routes>
+                            <Route path="/" element={<MainPage/>}/>
+                            <Route path="/comics">
+                                <Route index           element={<ComicsPage/>}/>
+                                <Route path=":comicId" element={<SingleComicPage/>}/>
+                                <Route path="new"      element={<Page404/>}/>
+                            </Route>
+                            <Route path="*" element={<Page404/>}/>
+                        </Routes>
+                    </Suspense>
                 </main>
             </div>
         </Router>
@@ -28,3 +35,18 @@ const App: FC = (): ReactNode => {
 }
 
 export default App;
+
+
+/* 
+
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/books">
+    <Route index element={<BookList />} />
+    <Route path=":id" element={<Book />} />
+    <Route path="new" element={<NewBook />} />
+  </Route>
+  <Route path="*" element={<NotFound />} />
+</Routes>
+
+*/

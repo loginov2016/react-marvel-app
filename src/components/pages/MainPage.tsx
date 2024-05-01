@@ -12,7 +12,7 @@ export interface IStateAppType {
 }
 
 
-const MainPage: FC = (): ReactNode => {
+export const MainPage: FC = (): ReactNode => {
     //p('Объект CSS стилей App: ', styles);
 
     const [selectedChar, setSelectedChar] = useState<number | null>(null);
@@ -33,5 +33,3 @@ const MainPage: FC = (): ReactNode => {
     </>
     )
 }
-
-export default MainPage;

@@ -58,6 +58,10 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
         arrRefs.current[i].focus();
     }
 
+    const mouseLeaveOnItem = (i: number): void => {
+        arrRefs.current[i].classList.add(styles.char__item_selected_blur);
+    }
+
     const onRequest = (offset: number | undefined, initial: boolean): void => {
         initial ? setNewCharListLoading(false) : setNewCharListLoading(true);
         getAllChars(offset).then( onCharListLoaded )
@@ -87,7 +91,12 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
                             if (e.key === ' ' || e.key === "Enter") {
                                 props.onCharSelected(item.id);
                                 focusOnItem(i);
+                                
                             }
+                        }
+                    }
+                    onMouseLeave={ e => {
+                        mouseLeaveOnItem(i);
                         }
                     }
                     >

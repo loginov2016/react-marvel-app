@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 import AppBanner from '../appBanner/AppBanner';
 import ComicsList from '../comicsList/ComicsList';
 
-const ComicsPage: FC = (): ReactNode => {
+export const ComicsPage: FC = (): ReactNode => {
 
   return (
     <>
@@ -11,5 +11,3 @@ const ComicsPage: FC = (): ReactNode => {
     </>
   )
 }
-
-export default ComicsPage;

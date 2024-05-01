@@ -32,6 +32,9 @@
             box-shadow: 0 5px 20px $main-color;
             transform: translateY(-8px);
         }
+        &_selected_blur {
+            box-shadow: none;
+        }
         &:hover {
             /* outline: 8px solid #f3f3f3; */
             box-shadow: 0 5px 20px $main-color;

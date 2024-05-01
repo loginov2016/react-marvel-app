@@ -1,2 +1,4 @@
-export { default as MainPage } from "./MainPage";
-export { default as ComicsPage } from "./ComicsPage";
+export { MainPage }        from "./MainPage";
+export { ComicsPage }      from "./ComicsPage";
+export { SingleComicPage } from "./SingleComicPage";
+//export { Page404 }         from "./Page404";
