@@ -15,11 +15,11 @@
 
 ### npm run build:dev
 
-Собирает приложение для производства в папке `build` в режиме development
+Собирает приложение в папке `build` в режиме development
 
 ### npm run build:prod
 
-Собирает приложение для производства в папке `build` в режиме production
+Собирает приложение в папке `build` в режиме production
 
 ### Развитие приложения
 
