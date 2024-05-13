@@ -1,7 +1,9 @@
 import React, { useState, FC, ReactNode } from 'react';
+import { Helmet } from 'react-helmet';
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
+import CharSearchForm from '../charSearchForm/CharSearchForm';
 
 import appStyles from '../app/App.module.scss';
 import charListStyles from '../charList/charList.module.scss';
@@ -23,11 +25,20 @@ export const MainPage: FC = (): ReactNode => {
     }
     
     return (
-    <>
+    <>  
+        <Helmet>
+            <meta name="description"
+            content="Marvel Comics portal"
+            />
+            <title>Marvel Comics Portal</title>
+        </Helmet>
         <RandomChar/>
         <div className={charListStyles.char__content}>
             <CharList onCharSelected={onCharSelected}/>
-            <CharInfo charId={selectedChar}/>
+            <div>
+                <CharInfo charId={selectedChar}/>
+                <CharSearchForm/>
+            </div>
         </div>
         <img className={appStyles['bg-decoration']} src={decoration} alt="vision"/>
     </>
