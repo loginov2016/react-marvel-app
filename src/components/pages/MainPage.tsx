@@ -1,4 +1,4 @@
-import React, { useState, FC, ReactNode } from 'react';
+import { useState, FC, ReactNode } from 'react';
 import { Helmet } from 'react-helmet';
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
@@ -15,12 +15,10 @@ export interface IStateAppType {
 
 
 export const MainPage: FC = (): ReactNode => {
-    //p('Объект CSS стилей App: ', styles);
 
     const [selectedChar, setSelectedChar] = useState<number | null>(null);
 
     const onCharSelected = (id: number): void => {
-        //p('id: ', id)
         setSelectedChar(id);
     }
     

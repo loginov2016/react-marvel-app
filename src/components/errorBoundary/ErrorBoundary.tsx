@@ -1,5 +1,4 @@
 import { Component, ErrorInfo, PropsWithChildren } from "react";
-import p from '../../lib/print';
 class ErrorBoundary extends Component<PropsWithChildren> {
     state = {
         error: false,
@@ -7,7 +6,6 @@ class ErrorBoundary extends Component<PropsWithChildren> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        //p(error, errorInfo);
         this.setState({
             error: true,
             errorInfo

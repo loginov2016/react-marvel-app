@@ -25,7 +25,6 @@ interface IComicType {
 
 export const SingleComicPage: FC = (): ReactElement => {
     const { comicId } = useParams();
-    //p('comicId: ', comicId);
 
     const {loading, error, clearError, getComic} = useMarvelService();
     const [comic, setComic] = useState<IComicType>(null);

@@ -58,16 +58,16 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
     }, [props.charId] );
 
     const onCharLoaded = (char: ICharType): void => {
-        p('CharInfo onCharLoaded => state => render');
-        p('CharInfo onCharLoaded: ', char);
+        //p('CharInfo onCharLoaded => state => render');
+        //p('CharInfo onCharLoaded: ', char);
         setChar(char);
         //setLoading(false);
     }
 
     const updateChar = (): void => {
-        p('CharInfo updateChar => state => render');
+        //p('CharInfo updateChar => state => render');
         const { charId } = props;
-        p('charId: ', charId);
+        //p('charId: ', charId);
         if( !charId ) {
             return;
         }
@@ -78,9 +78,7 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
         // Метод getChar() => вернет промис с результатом - массив с одним элементом - объектом типа ICharType.
     }
-
     
-    //p('char: ', char, 'loading: ', loading, 'error: ', error);
     const skeleton = char || loading || error ? null : <Skeleton/>;
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;

@@ -7,6 +7,7 @@ import { classNames as cn } from '../../lib/classNames';
 import buttons from '../../style/button.module.scss';
 import styles from './randomChar.module.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
+import { Link } from 'react-router-dom';
 
 interface ICharType {
     id: number | null,
@@ -26,22 +27,18 @@ const RandomChar: FC = (): ReactNode => {
     const {loading, error, clearError, getChar} = useMarvelService(); // {loading: false, error: null, f(){...}, f(){...}}
     const [char, setChar]                       = useState<ICharType>(null);
     const [newRandomCharLoading, setNewRandomCharLoading] = useState(false);
+    const [buttonName, setButtonName] = useState('Try It');
     
-    
-
     useEffect( () => {
         p('RandomChar useEffect => updateChar');
         updateChar();
-        /* const timerId = setInterval(updateChar, 60000);
-        return () => {
-            clearInterval(timerId);
-        } */
     }, [] );
 
     const onCharLoaded = (char: ICharType): void => {
         p('RandomChar onCharLoaded => state => render');
         setChar(char);
         setNewRandomCharLoading(false);
+        setButtonName('Try It');
     }
 
     const updateChar = (): void => {
@@ -49,8 +46,12 @@ const RandomChar: FC = (): ReactNode => {
         clearError();
         const id = Math.floor( Math.random() * 400 + 1011000 );
         //p(getChar(id).then( item => p(item) ) );
-        getChar(id).then( onCharLoaded ).catch( e => setNewRandomCharLoading(false)) // Set loading = true; Когда в getChar происходит ошибка запроса, то onCharLoaded не выполняется.
-                                          // Следовательно newRandomCharLoading === true
+        getChar(id).then( onCharLoaded ).catch( e => {
+            setNewRandomCharLoading(false);
+            setButtonName('Loading Error!');
+        }) 
+        // Set loading = true; Когда в getChar происходит ошибка запроса, то onCharLoaded не выполняется.
+        // Следовательно newRandomCharLoading === true
         // Метод getAllChars() => вернет промис с результатом - массив объектов.
     }
 
@@ -58,11 +59,7 @@ const RandomChar: FC = (): ReactNode => {
     //marvelServices.getAllChars().then( item => p(item.data.results.forEach( (char: { name: string; }) => p(char.name) )) );
     //this.marvelServices.getChar(1011052).then( item => p(item.data.results[0]) );
     //p('Объект CSS стилей RandomChar: ', buttons);
-    
     const errorMessage = error ? <ErrorMessage/> : null;
-    /* if( error ) {
-        setNewRandomCharLoading(false); 
-    } */
     //p('Random Char loading: ', loading);
     p('Random Char newRandomCharLoading: ', newRandomCharLoading);
     //const charError = error ? setNewRandomCharLoading(false) : null;
@@ -85,13 +82,14 @@ const RandomChar: FC = (): ReactNode => {
                 <button 
                     className={cn(buttons.button, buttons.button__main)} 
                     onClick={ () => {
-                                setNewRandomCharLoading(true); 
+                                setNewRandomCharLoading(true);
+                                setButtonName('Loading...');
                                 updateChar();
                             }
                     }
                     disabled={newRandomCharLoading}
                     >
-                    <div className={buttons.inner}>try it</div>
+                    <div className={buttons.inner}>{buttonName}</div>
                 </button>
                 <img src={mjolnir} alt="mjolnir" className={styles.randomchar__decoration}/>
             </div>
@@ -102,7 +100,8 @@ const RandomChar: FC = (): ReactNode => {
 
 const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactElement => {
     p('char: ', char);
-    const {name, description, thumbnail, homepage, wiki} = char;
+    const {name, description, thumbnail, homepage, wiki, id} = char;
+    console.log('homepage: ', homepage);
 
     let imgStyle: CSSProperties = {'objectFit': 'cover'};
     if( thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ) {
@@ -116,12 +115,12 @@ const View: FC<IPropsType> = ( {char}: IPropsType  ): ReactElement => {
                 <p className={styles.randomchar__name}>{name}</p>
                 <p className={styles.randomchar__descr}>{description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character'}</p>
                 <div className={styles.randomchar__btns}>
-                    <a href={homepage} className={cn(buttons.button, buttons.button__main)}>
+                    <Link to={`/characters/${id}`} className={cn(buttons.button, buttons.button__main)}>
                         <div className={buttons.inner}>homepage</div>
-                    </a>
-                    <a href={wiki} className={cn(buttons.button, buttons.button__secondary)}>
+                    </Link>
+                    <Link to={wiki} className={cn(buttons.button, buttons.button__secondary)}>
                         <div className={buttons.inner}>Wiki</div>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -8,8 +8,6 @@ import { classNames as cn } from '../../lib/classNames';
 import buttons from '../../style/button.module.scss';
 import styles from './charList.module.scss';
 
-import abyss from '../../resources/img/abyss.jpg';
-
 interface IPropsType {
     onCharSelected: (id: number) => void
 }
@@ -53,6 +51,7 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
 
     const focusOnItem = (i: number): void => {
         //arrRefs.current.forEach( item => p(item) );
+        //p('Focus: ', document.activeElement);
         arrRefs.current.forEach( item => item.classList.remove(styles.char__item_selected) );
         arrRefs.current[i].classList.add(styles.char__item_selected);
         arrRefs.current[i].focus();
@@ -127,7 +126,7 @@ const CharList: FC<IPropsType> = (props: IPropsType): ReactElement => {
                 disabled={newCharListLoading}
                 style={{'display': charEnded ? 'none' : 'block'}}
                 onClick={() => onRequest(offset, false)}>
-                <div className={buttons.inner}>load more</div>
+                <div className={buttons.inner}>{newCharListLoading ? 'Loading...' : 'Load more'}</div>
             </button>
         </div>
     )

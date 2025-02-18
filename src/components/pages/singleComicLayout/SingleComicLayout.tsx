@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import singleComicLayoutStyle from './singleComicLayout.module.scss';
 
-
 interface IComicType {
     id: string;
     title: string,

@@ -7,10 +7,6 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 import AppBanner from "../appBanner/AppBanner";
 import { Helmet } from 'react-helmet';
 
-// Хотелось бы вынести функцию по загрузке данных как отдельный аргумент
-// Но тогда мы потеряем связь со стэйтами загрузки и ошибки
-// А если вынесем их все в App.js - то они будут одни на все страницы
-
 //type TComicOrChar<T> = T extends TDataType ? IComicType : ICharType;
 
 type TDataType = 'comic' | 'character';

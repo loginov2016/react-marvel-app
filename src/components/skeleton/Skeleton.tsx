@@ -8,7 +8,7 @@ import stylesSkeleton from './skeleton.module.scss';
 class Skeleton extends Component {
     
     render() {
-        p('Skeleton styles: ', stylesCharInfo); // skeleton__header, skeleton____circle, skeleton____mini, skeleton____block.
+        //p('Skeleton styles: ', stylesCharInfo); // skeleton__header, skeleton____circle, skeleton____mini, skeleton____block.
         return (
             <>
                 <p className={stylesCharInfo.char__select}>Please select a character to see information</p>

@@ -4,9 +4,6 @@ import avengers from '../../resources/img/Avengers.png';
 import avengersLogo from '../../resources/img/Avengers_logo.png';
 
 const AppBanner = () => {
-
-    //p('Объект CSS стилей: ', styles);
-
     return (
         <div className={styles.app__banner}>
             <img src={avengers} alt="Avengers"/>

@@ -26,8 +26,8 @@ const App: FC = (): ReactNode => {
                                 {/* <Route path=":comicId" element={<SingleComicPage/>}/> */}
                                 <Route path=":id" element={<SinglePage Component={SingleComicLayout} dataType='comic'/>}/>
                             </Route>
-                            <Route path="/">
-                                <Route path="characters/:id" element={<SinglePage Component={SingleCharLayout} dataType='character'/>}/>
+                            <Route path="/characters">
+                                <Route path=":id" element={<SinglePage Component={SingleCharLayout} dataType='character'/>}/>
                             </Route>
                             <Route path="*" element={<Page404/>}/>
                         </Routes>
@@ -40,16 +40,3 @@ const App: FC = (): ReactNode => {
 }
 
 export default App;
-
-
-/* 
-<Routes>
-  <Route path="/" element={<Home />} />
-  <Route path="/books">
-    <Route index element={<BookList />} />
-    <Route path=":id" element={<Book />} />
-    <Route path="new" element={<NewBook />} />
-  </Route>
-  <Route path="*" element={<NotFound />} />
-</Routes>
-*/
