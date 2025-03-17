@@ -9,6 +9,7 @@ import Skeleton from '../skeleton/Skeleton';
 import { classNames as cn } from '../../lib/classNames';
 import buttons from '../../style/button.module.scss';
 import styles from './charInfo.module.scss';
+import { Link } from 'react-router-dom';
 
 interface IPropsType {
     charId: number
@@ -126,7 +127,7 @@ const View = ({char}: IViewPropsType) => {
                     if( index > 9 ) return; // Если индекс элемента массива становиться больше 9, то происходит выход из функции. 
                     return (
                         <li key={index} className={styles['char__comics-item']}>
-                            <a href={item.resourceURI}>{item.name}</a>
+                            <Link to={item.resourceURI}>{item.name}</Link>
                         </li>
                     )
                 } ) : 'There is no comics with this character' }
