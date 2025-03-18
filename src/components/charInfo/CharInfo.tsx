@@ -97,7 +97,7 @@ const CharInfo: FC<IPropsType> = (props: IPropsType): ReactElement => {
 }
 
 const View = ({char}: IViewPropsType) => {
-    const {name, description, thumbnail, homepage, wiki, comics} = char;
+    const {id, name, description, thumbnail, homepage, wiki, comics} = char;
     let imgStyle: CSSProperties = {'objectFit': 'cover'};
     if( thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ) {
         imgStyle = {'objectFit': 'contain'};
@@ -109,9 +109,9 @@ const View = ({char}: IViewPropsType) => {
                 <div>
                     <div className={styles['char__info-name']}>{name}</div>
                     <div className={styles.char__btns}>
-                        <a href={homepage} className={cn(buttons.button, buttons.button__main)}>
+                        <Link to={`/characters/${id}`} className={cn(buttons.button, buttons.button__main)}>
                             <div className={buttons.inner}>Homepage</div>
-                        </a>
+                        </Link>
                         <a href={wiki} className={cn(buttons.button, buttons.button__secondary)}>
                             <div className={buttons.inner}>Wiki</div>
                         </a>
